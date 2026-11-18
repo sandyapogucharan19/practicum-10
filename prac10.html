@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevStream - DOM Manipulation & Timers (Prac 10)</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4fa;
+            color: #17324d;
+            padding: 30px;
+            margin: 0;
+        }
+
+        .box {
+            max-width: 680px;
+            margin: 0 auto 22px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #93c5fd;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+
+        h2 {
+            color: #2563eb;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #93c5fd;
+            border-radius: 6px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #1e40af;
+        }
+
+        button.stop {
+            background-color: #dc2626;
+        }
+
+        .readout {
+            background-color: #dbeafe;
+            padding: 13px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+        <h2>1. Course Fee Calculator</h2>
+
+        <select id="courseType">
+            <option value="500">HTML & CSS (₹500)</option>
+            <option value="800">JavaScript (₹800)</option>
+            <option value="1000">Python (₹1000)</option>
+        </select>
+
+        <input type="number" id="hours" placeholder="Enter hours" min="0" value="1">
+
+        <button onclick="calculateFee()">Calculate Fee</button>
+
+        <div id="feeOutput" class="readout">
+            Estimated Fee: ₹500
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>2. Coding Session Timer</h2>
+
+        <button onclick="startSession()">Start Session</button>
+        <button class="stop" onclick="stopSession()">Stop Session</button>
+
+        <div id="sessionStatus" class="readout">
+            Status: Coding session is waiting to start.
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>3. Live Learning Monitor</h2>
+
+        <button onclick="startMonitor()">Start Monitor</button>
+        <button class="stop" onclick="stopMonitor()">Stop Monitor</button>
+
+        <div id="clock" class="readout">
+            Time: Click Start Monitor
+        </div>
+
+        <div id="progress" class="readout">
+            Coding Progress: 0 Minutes
+        </div>
+    </div>
+
+    <script>
+        function calculateFee() {
+            const rate = parseFloat(document.querySelector("#courseType").value);
+            const hours = parseFloat(document.getElementById("hours").value);
+
+            if (isNaN(hours) || hours <= 0) {
+                document.getElementById("feeOutput").innerText =
+                    "Please enter valid learning hours.";
+                return;
+            }
+
+            const fee = rate * hours;
+
+            document.getElementById("feeOutput").innerText =
+                "Estimated Course Fee: ₹" + fee.toFixed(2);
+        }
+
+        let sessionTimer;
+
+        function startSession() {
+            clearTimeout(sessionTimer);
+
+            document.getElementById("sessionStatus").innerText =
+                "Coding session started...";
+
+            sessionTimer = setTimeout(function() {
+                document.getElementById("sessionStatus").innerText =
+                    "Coding session completed!";
+            }, 4000);
+        }
+
+        function stopSession() {
+            clearTimeout(sessionTimer);
+
+            document.getElementById("sessionStatus").innerText =
+                "Coding session has been stopped.";
+        }
+
+        let monitorTimer = null;
+        let totalMinutes = 0;
+
+        function startMonitor() {
+            if (monitorTimer !== null) return;
+
+            monitorTimer = setInterval(function() {
+                totalMinutes++;
+
+                document.getElementById("clock").innerText =
+                    "Current Time: " + new Date().toLocaleTimeString();
+
+                document.getElementById("progress").innerText =
+                    "Coding Progress: " + totalMinutes + " Minutes";
+            }, 1000);
+        }
+
+        function stopMonitor() {
+            clearInterval(monitorTimer);
+            monitorTimer = null;
+
+            document.getElementById("clock").innerText =
+                "Learning monitor stopped.";
+        }
+    </script>
+
+</body>
+</html>
